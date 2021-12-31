@@ -42,8 +42,8 @@
 					<div class="widget-header">
 						<small class="title text-muted" style="color:white">Welcome guest!</small>
 						<div>
-							<a href="./signin.html" style=" color:white">Sign in</a> <span class="dark-transp"> | </span>
-							<a href="./register.html" style=" color:white"> Register</a>
+							<a href="{% url 'login' %}" style=" color:white">Sign in</a> <span class="dark-transp"> | </span>
+							<a href="{% url  'register' %}" style=" color:white"> Register</a>
 						</div>
 					</div>
 					<a href="{% url 'cart' %}" class="widget-header pl-3 ml-3">
