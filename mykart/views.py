@@ -5,6 +5,6 @@ from store.models import Product
 def home(request):
     products = Product.objects.all().filter(is_available=True)
     data = {
-        'products':products,
+        'products' : products,
     }
-    return render(request,"index.html",data)
+    return render(request, "index.html", data)
