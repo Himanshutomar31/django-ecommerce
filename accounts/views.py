@@ -1,3 +1,7 @@
+import shlex
+
+import requests.utils
+
 from django.shortcuts import render, redirect, HttpResponse
 from .forms import RegistrationForm
 from .models import Account
@@ -64,13 +68,14 @@ def login(request):
                 cart = Cart.objects.get(cart_id=_cart_id(request))
                 is_cart_item_exists = CartItem.objects.filter(cart=cart).exists()
                 if is_cart_item_exists:
-
+                    # cart when user is not logged in
                     cart_item = CartItem.objects.filter(cart=cart)
                     product_variation = []
                     for item in cart_item:
-                        variation = item.variations.all()
+                        variation = item.variation.all()
                         product_variation.append(list(variation))
 
+                    # user's cart
                     cart_item = CartItem.objects.filter(user=user)
                     exist_var_list = []
                     id = []
@@ -79,16 +84,33 @@ def login(request):
                         exist_var_list.append(list(existing_variation))
                         id.append(item.id)
 
-
-                    for item in cart_item:
-                        item.user = user
-                        item.save()
+                    for pr in product_variation:
+                        if pr in exist_var_list:
+                            index = exist_var_list.index(pr)
+                            item_id = id[index]
+                            item = CartItem.objects.get(id=item_id)
+                            item.quantity += 1
+                            item.user = user
+                            item.save()
+                        else:
+                            cart_item = CartItem.objects.filter(cart=cart)
+                            for item in cart_item:
+                                item.user = user
+                                item.save()
             except:
                 pass
-
             auth.login(request, user)
             messages.success(request, "You are now logged in.")
-            return redirect('dashboard')
+            url = request.META.get('HTTP_REFERER')
+            try:
+                query = requests.utils.urlparse(url).query
+                params = dict(x.split('=') for x in query.split('&'))
+                if 'next' in params:
+                    nextPage = params['next']
+                    return redirect(nextPage)
+            except:
+                return redirect('dashboard')
+
         else:
             messages.error(request, "Invalid Login Credentials")
             return redirect('login')
@@ -96,7 +118,7 @@ def login(request):
     return render(request, 'accounts/login.html')
 
 
-@login_required(login_url = 'login')
+@login_required(login_url='login')
 def logout(request):
     auth.logout(request)
     messages.success(request, "You are logged out.")
