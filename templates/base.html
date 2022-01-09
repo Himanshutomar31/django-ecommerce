@@ -1,5 +1,6 @@
 <!DOCTYPE HTML>
 {% load static %}
+{% load static tailwind_tags %}
 <html lang="en">
 <head>
 <meta charset="utf-8">
@@ -38,7 +39,7 @@ $(document).ready(function() {
 });
 // jquery end
 </script>
-
+{% tailwind_css %}
 </head>
 <body>
 {% include 'includes/navbar.html' %}
