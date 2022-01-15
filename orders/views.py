@@ -4,13 +4,16 @@ from django.shortcuts import render, redirect
 from cart.models import CartItem
 from .forms import OrderForm
 from orders.models import Order
+from django.http import HttpResponse
+from django.utils.translation import get_language
+from django.views.decorators.csrf import csrf_exempt
+from django.conf import settings
 import requests
 import datetime
+import paytmchecksum
+import json
 
 # Create your views here.
-
-def payments(request):
-    return render(request, 'orders/payment.html')
 
 def place_order(request, total=0, quantity=0):
     current_user = request.user
@@ -56,7 +59,6 @@ def place_order(request, total=0, quantity=0):
             order_number = current_date + str(data.id)
             data.order_number = order_number
             data.save()
-
             order = Order.objects.get(user=current_user, is_ordered=False, order_number=order_number)
             context = {
                 'order': order,
@@ -64,10 +66,41 @@ def place_order(request, total=0, quantity=0):
                 'total': total,
                 'tax': tax,
                 'grand_total': grand_total,
+                'order_number': order.order_number
             }
             return render(request, 'orders/payments.html', context)
         else:
             return redirect('checkout')
+
+
+def payment(request, order_id):
+    current_user = request.user
+    order = Order.objects.get(user=current_user, is_ordered=False, order_number=order_id)
+    MERCHANT_KEY = settings.PAYTM_MERCHANT_KEY
+    MERCHANT_ID = settings.PAYTM_MERCHANT_ID
+    context = {
+         'MID': MERCHANT_ID,
+        'ORDER_ID': order_id, 'TXN_AMOUNT': str(order.order_total), 'CUST_ID': order.email,
+        'INDUSTRY_TYPE_ID': 'Retail', 'WEBSITE': settings.PAYTM_WEBSITE, 'CHANNEL_ID': 'WEB',
+        'CALLBACK_URL': 'http://127.0.0.1:8000/orders/response/'
+    }
+    context['CHECKSUMHASH'] = paytmchecksum.generateSignature(context, MERCHANT_KEY)
+    return render(request, 'orders/makepayment.html', { 'context': context})
+
+
+@csrf_exempt
+def response(request):
+    if request.method == "POST":
+        MERCHANT_KEY = settings.PAYTM_MERCHANT_KEY
+        data_dict = {}
+        for key in request.POST:
+            data_dict[key] = request.POST[key]
+        verify = paytmchecksum.verifySignature(data_dict, MERCHANT_KEY, data_dict['CHECKSUMHASH'])
+        if verify:
+            return render(request, "response.html", { "paytm": data_dict})
+        else:
+            return HttpResponse("checksum verify failed")
+    return HttpResponse(status=200)
 
 
 
