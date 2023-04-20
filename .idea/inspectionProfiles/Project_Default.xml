@@ -5,6 +5,8 @@
       <option name="ignoredIdentifiers">
         <list>
           <option value="thecrafttown.ecommerce.Category" />
+          <option value="mykart.urls.settings" />
+          <option value="mykart.urls.MEDIA_ROOT" />
         </list>
       </option>
     </inspection_tool>
