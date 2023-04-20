@@ -153,11 +153,10 @@ def save_payment_details(data_dict):
         product.save()
     CartItem.objects.filter(user=curr_user[0]).delete()
 
-
     mail_subject = 'Thank you! for your order'
     message = render_to_string('orders/order_received_email.html', {
-    'user': curr_user[0],
-    'order':order,
+        'user': curr_user[0],
+        'order': order,
     })
     to_email = curr_user[0].email
     send_email = EmailMessage(mail_subject, message, to=[to_email, ])
@@ -172,4 +171,3 @@ def save_payment_details(data_dict):
 
 def order_complete(request):
     return render(request, 'orders/order_complete.html')
-

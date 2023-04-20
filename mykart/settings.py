@@ -45,6 +45,11 @@ INSTALLED_APPS = [
     'orders'
 ]
 
+TAILWIND_APP_NAME = 'theme'
+INTERNAL_IPS = [
+    "127.0.0.1",
+]
+
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -144,15 +149,15 @@ MESSAGE_TAGS = {
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # SMTP configrations
-EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_HOST = ''
 EMAIL_PORT = 587
-EMAIL_HOST_USER = 'dev.himanshutomar@gmail.com'
-EMAIL_HOST_PASSWORD = 'thecrafttown@2022'
+EMAIL_HOST_USER = ''
+EMAIL_HOST_PASSWORD = ''
 EMAIL_USE_TLS = True
 
 # Payment info
-PAYTM_MERCHANT_ID = 'KOvVPZ61931325760156'
-PAYTM_MERCHANT_KEY = 'ZKwRSfvOSs6kUQ&%'
-PAYTM_WEBSITE = 'WEBSTAGING'
-PAYTM_CHANNEL_ID = 'WEB'
-PAYTM_INDUSTRY_TYPE_ID = 'Retail'
+PAYTM_MERCHANT_ID = ''
+PAYTM_MERCHANT_KEY = ''
+PAYTM_WEBSITE = ''
+PAYTM_CHANNEL_ID = ''
+PAYTM_INDUSTRY_TYPE_ID = ''
