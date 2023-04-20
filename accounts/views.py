@@ -48,8 +48,9 @@ def register(request):
             to_email = email
             send_email = EmailMessage(mail_subject, message, to=[to_email, ])
             send_email.send()
-            # messages.success(request, 'Thank you for registering with us. We have sent you a verification email, please verify.')
-            return redirect('accounts/login?command=verification&email=' + email)
+            messages.success(
+                request, 'Thank you for registering with us. We have sent you a verification email, please verify.')
+            return redirect('login')
 
     form = RegistrationForm()
     context = {
@@ -68,7 +69,8 @@ def login(request):
             try:
                 # nouser cart
                 cart = Cart.objects.get(cart_id=_cart_id(request))
-                is_cart_item_exists = CartItem.objects.filter(cart=cart).exists()
+                is_cart_item_exists = CartItem.objects.filter(
+                    cart=cart).exists()
                 if is_cart_item_exists:
                     # cart when user is not logged in
                     # All items of nouser cart
@@ -89,7 +91,9 @@ def login(request):
                             for i in variation1:
                                 lst_var1[i.variation_category] = i.variation_value
 
-                            variation2 = cart_item_user_products[item].variation.all()  # color:red, size:small
+                            # color:red, size:small
+                            variation2 = cart_item_user_products[item].variation.all(
+                            )
                             lst_var2 = dict()
                             for i in variation2:
                                 lst_var2[i.variation_category] = i.variation_value
@@ -106,7 +110,8 @@ def login(request):
                                             product.save()
                                             break
                                 if check:
-                                    item = CartItem.objects.get(id=cart_item_user_products[item].id)
+                                    item = CartItem.objects.get(
+                                        id=cart_item_user_products[item].id)
                                     item.quantity += 1
                                     item.user = user
                                     item.save()
@@ -185,7 +190,8 @@ def activate(request, uidb64, token):
     if user is not None and default_token_generator.check_token(user, token):
         user.is_active = True
         user.save()
-        messages.success(request, "Congratulations! your account has been activated.")
+        messages.success(
+            request, "Congratulations! your account has been activated.")
         return redirect('login')
     else:
         messages.error(request, "Invalid activation link")
@@ -214,7 +220,8 @@ def forgotPassword(request):
             send_email = EmailMessage(mail_subject, message, to=[to_email, ])
             send_email.send()
 
-            messages.success(request, "Password reset has been sent to your email address.")
+            messages.success(
+                request, "Password reset has been sent to your email address.")
             return redirect('login')
 
         else:

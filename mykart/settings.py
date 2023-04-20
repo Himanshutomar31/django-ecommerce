@@ -10,6 +10,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/3.2/ref/settings/
 """
 
+from django.contrib.messages import constants as messages
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -41,17 +42,13 @@ INSTALLED_APPS = [
     'accounts',
     'store',
     'cart',
-    'orders',
-    'tailwind',
-    'theme'
-
+    'orders'
 ]
 
 TAILWIND_APP_NAME = 'theme'
 INTERNAL_IPS = [
     "127.0.0.1",
 ]
-NPM_BIN_PATH = r"C:\Program Files\nodejs\npm.cmd"
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -143,7 +140,6 @@ STATICFILES_DIRS = [
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media/'
 
-from django.contrib.messages import constants as messages
 MESSAGE_TAGS = {
     messages.ERROR: 'danger',
 }
@@ -152,17 +148,16 @@ MESSAGE_TAGS = {
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-#SMTP configrations
-EMAIL_HOST = 'smtp.gmail.com'
+# SMTP configrations
+EMAIL_HOST = ''
 EMAIL_PORT = 587
-EMAIL_HOST_USER = 'dev.himanshutomar@gmail.com'
-EMAIL_HOST_PASSWORD = 'thecrafttown@2022'
+EMAIL_HOST_USER = ''
+EMAIL_HOST_PASSWORD = ''
 EMAIL_USE_TLS = True
 
-
-#Payment info
-PAYTM_MERCHANT_ID = 'KOvVPZ61931325760156'
-PAYTM_MERCHANT_KEY = 'ZKwRSfvOSs6kUQ&%'
-PAYTM_WEBSITE = 'WEBSTAGING'
-PAYTM_CHANNEL_ID = 'WEB'
-PAYTM_INDUSTRY_TYPE_ID = 'Retail'
+# Payment info
+PAYTM_MERCHANT_ID = ''
+PAYTM_MERCHANT_KEY = ''
+PAYTM_WEBSITE = ''
+PAYTM_CHANNEL_ID = ''
+PAYTM_INDUSTRY_TYPE_ID = ''
